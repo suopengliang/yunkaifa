@@ -18,8 +18,57 @@ export default {
   data () {
     return {
       list: [],
-      listDetail: '',
-      tableList: [{
+      listDetail: {},
+      tableList: []
+    }
+  },
+  mounted () {
+    const that = this
+    this.list = []
+    this.listDetail.img = ''
+    this.loadData()
+    wx.showLoading({
+      title: '加载中'
+    })
+    const number = this.$root.$mp.query.number
+    wx.cloud.callFunction({
+      name: 'getweishoulist',
+      success: function (res) {
+        that.list = res.result.data
+        that.list.forEach(item => {
+          if (item.number === parseInt(number)) {
+            that.listDetail = item.content
+          }
+        })
+        wx.setNavigationBarTitle({
+          title: that.listDetail.name
+        })
+        that.tableList.forEach(item => {
+          for (var key in that.listDetail) {
+            if (item.key === key) {
+              item.value = that.listDetail[key]
+            }
+          }
+        })
+        wx.hideLoading()
+      },
+      fail: function (err) {
+        console.log('云函数获取数据失败', err)
+      }
+    })
+  },
+  onUnload () {
+    this.loadData()
+  },
+  methods: {
+    btn () {
+      this.check = !this.check
+    },
+    change (obj) {
+      console.log(obj)
+    },
+    loadData () {
+      this.tableList = [{
         key: 'name',
         name: '尾兽',
         value: ''
@@ -56,43 +105,6 @@ export default {
         name: '国家/忍村',
         value: ''
       }]
-    }
-  },
-  mounted () {
-    const that = this
-    that.list = []
-    const number = this.$root.$mp.query.number
-    wx.cloud.callFunction({
-      name: 'getweishoulist',
-      success: function (res) {
-        that.list = res.result.data
-        that.list.forEach(item => {
-          if (item.number === parseInt(number)) {
-            that.listDetail = item.content
-          }
-        })
-        wx.setNavigationBarTitle({
-          title: that.listDetail.name
-        })
-        that.tableList.forEach(item => {
-          for (var key in that.listDetail) {
-            if (item.key === key) {
-              item.value = that.listDetail[key]
-            }
-          }
-        })
-      },
-      fail: function (err) {
-        console.log('云函数获取数据失败', err)
-      }
-    })
-  },
-  methods: {
-    btn () {
-      this.check = !this.check
-    },
-    change (obj) {
-      console.log(obj)
     }
   }
 }
