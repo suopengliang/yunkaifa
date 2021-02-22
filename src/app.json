@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/rencun/main",
+    "pages/renzhe/detail/main",
+    "pages/weishou/main",
+    "pages/weishou/detail/main",
+    "pages/renshu/main",
+    "pages/renshuz/main",
+    "pages/renzhe/main",
+    "pages/index/main",
+    "pages/counter/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "忍者大全",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999",
+    "backgroundColor": "#fafafa",
+    "selectedColor": "#333",
+    "borderStyle": "white",
+
+    "list": [{
+      "text": "忍村",
+      "pagePath": "pages/rencun/main",
+      "iconPath": "/static/icon/ic_renzhe_normal.png",
+      "selectedIconPath": "/static/icon/ic_renzhe_focused.png"
+    }, {
+      "text": "尾兽",
+      "pagePath": "pages/weishou/main",
+      "iconPath": "/static/icon/ic_weishou_normal.png",
+      "selectedIconPath": "/static/icon/ic_weishou_focused.png"
+    }, {
+      "text": "忍术",
+      "pagePath": "pages/renshu/main",
+      "iconPath": "/static/icon/ic_renshu_normal.png",
+      "selectedIconPath": "/static/icon/ic_renshu_focused.png"
+    }],
+    "position": "bottom"
+  }
+}

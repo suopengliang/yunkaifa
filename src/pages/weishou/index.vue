@@ -1,0 +1,88 @@
+<template>
+  <view class="dbody">
+    <view class="body" v-for="(item, index) in list" :key="index">
+      <view class="top" @click="change(item)">
+        <image :src="item.img"></image>
+        <span>{{ item.name }}</span>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      list: []
+    }
+  },
+  mounted () {
+    const that = this
+    wx.setNavigationBarTitle({
+      title: '尾兽大全'
+    })
+    that.list = []
+    wx.cloud.callFunction({
+      name: 'getweishoulist',
+      success: function (res) {
+        that.list = res.result.data
+      },
+      fail: function (err) {
+        console.log('云函数获取数据失败', err)
+      }
+    })
+  },
+  methods: {
+    btn () {
+      this.check = !this.check
+    },
+    change (obj) {
+      wx.navigateTo({
+        url: '/pages/weishou/detail/main?number=' + obj.number
+      })
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.fold-content {
+  width: 100%;
+  background: #e5e5e5;
+  height: 0px;
+  opacity: 0;
+  z-index: 998;
+}
+.fon {
+  transition: all 1s;
+}
+.checked {
+  background: #e5e5e5;
+}
+.on {
+  background: #ffffff;
+  opacity: 1;
+  height: 100%;
+  z-index: 998;
+  transition: all 1s;
+}
+.dbody {
+  display: flex;
+  flex-direction: column;
+  .body {
+    border-bottom: 1px solid #e5e5e5;
+    .top {
+      display: flex;
+      align-items: center;
+      z-index: 9999;
+      image {
+        width: 1rem;
+        height: 1rem;
+        margin: 0.2rem;
+      }
+      span {
+        flex: 1;
+      }
+    }
+  }
+}
+</style>
