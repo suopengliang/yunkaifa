@@ -11,6 +11,7 @@
             class="tops"
             v-for="(items, indexs) in list"
             :key="indexs"
+            @click="change(items)"
           >
             <image :src="items.img"></image>
             <span>{{ items.name }}</span>
@@ -33,6 +34,9 @@ export default {
     wx.setNavigationBarTitle({
       title: '忍者'
     })
+    wx.showLoading({
+      title: '加载中...'
+    })
     that.list = []
     const rencun = that.$root.$mp.query.cunzi
     wx.cloud.callFunction({
@@ -44,6 +48,11 @@ export default {
             that.list.push(item)
           }
         })
+        that.list = that.list.map(item => {
+          item.img = item.img.replace(/www.hxy1995.xyz/, 'n8.hxy1995.xyz:8081')
+          return item
+        })
+        wx.hideLoading()
       },
       fail: function (err) {
         console.log('云函数获取数据失败', err)
@@ -55,19 +64,8 @@ export default {
       this.check = !this.check
     },
     change (obj) {
-      console.log(obj)
-      this.list.forEach((item, index) => {
-        if (item.id === obj.id) {
-          item.checked = !item.checked
-          this.$set(this.list, index, {
-            id: item.id,
-            checked: item.checked,
-            title: { img: item.title.img, name: item.title.name },
-            content: item.content
-          })
-        } else {
-          item.checked = false
-        }
+      wx.navigateTo({
+        url: '/pages/renzhe/detail/main?id=' + obj.id
       })
     }
   }

@@ -18,6 +18,9 @@ export default {
   },
   mounted () {
     const that = this
+    wx.showLoading({
+      title: '加载中...'
+    })
     wx.setNavigationBarTitle({
       title: '尾兽大全'
     })
@@ -25,7 +28,11 @@ export default {
     wx.cloud.callFunction({
       name: 'getweishoulist',
       success: function (res) {
-        that.list = res.result.data
+        that.list = res.result.data.map(item => {
+          item.img = item.img.replace(/www.hxy1995.xyz/, 'n8.hxy1995.xyz:8081')
+          return item
+        })
+        wx.hideLoading()
       },
       fail: function (err) {
         console.log('云函数获取数据失败', err)

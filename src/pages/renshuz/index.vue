@@ -26,6 +26,9 @@ export default {
   mounted () {
     const that = this
     that.list = []
+    wx.showLoading({
+      title: '加载中...'
+    })
     wx.cloud.callFunction({
       name: 'getrenshulist',
       success: function (res) {
@@ -38,6 +41,7 @@ export default {
             })
           }
         })
+        wx.hideLoading()
       },
       fail: function (err) {
         console.log('云函数获取数据失败', err)

@@ -26,6 +26,9 @@ export default {
   },
   mounted () {
     const that = this
+    wx.showLoading({
+      title: '加载中...'
+    })
     wx.setNavigationBarTitle({
       title: '忍术'
     })
@@ -34,6 +37,7 @@ export default {
       name: 'getrenshulist',
       success: function (res) {
         that.list = res.result.data
+        wx.hideLoading()
       },
       fail: function (err) {
         console.log('云函数获取数据失败', err)

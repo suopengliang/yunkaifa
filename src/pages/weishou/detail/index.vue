@@ -50,6 +50,7 @@ export default {
             }
           }
         })
+        that.listDetail.img = that.listDetail.img.replace(/www.hxy1995.xyz/, 'n8.hxy1995.xyz:8081')
         wx.hideLoading()
       },
       fail: function (err) {

@@ -1,5 +1,5 @@
 <template>
-  <view class="dbody">
+  <view class="dbody" v-if="show">
     <view class="top">
       <image :src="listDetail.img"></image>
     </view>
@@ -20,68 +20,83 @@ export default {
       list: [],
       listDetail: '',
       tableList: [{
-        key: 'name',
-        name: '尾兽',
+        key: 'shenfen',
+        name: '身份',
+        value: ''
+      }, {
+        key: 'dengji',
+        name: '等级',
+        value: ''
+      }, {
+        key: 'chakelashuxing',
+        name: '查克拉属性',
         value: ''
       }, {
         key: 'shengyou',
         name: '声优',
         value: ''
       }, {
-        key: 'weishu',
-        name: '尾数',
+        key: 'rname',
+        name: '外文名字',
         value: ''
       }, {
-        key: 'introduce',
-        name: '介绍',
+        key: 'renxcun',
+        name: '忍村',
         value: ''
       }, {
-        key: 'yuanxing',
-        name: '原型特征',
+        key: 'renshu',
+        name: '忍术',
         value: ''
       }, {
-        key: 'nengli',
-        name: '能力',
+        key: 'jiazu',
+        name: '家族',
         value: ''
       }, {
-        key: 'xiangzheng',
-        name: '象征',
+        key: 'jiaren',
+        name: '家人',
         value: ''
       }, {
-        key: 'renzhuli',
-        name: '人柱力',
+        key: 'jianjie',
+        name: '简介',
         value: ''
-      }, {
-        key: 'address',
-        name: '国家/忍村',
-        value: ''
-      }]
+      }],
+      show: false
     }
   },
   mounted () {
     const that = this
-    that.list = []
     var id = this.$root.$mp.query.id
-    id = 126
     wx.cloud.callFunction({
       name: 'getrenzhelist',
       success: function (res) {
-        that.list = res.result.data
-        that.list.forEach(item => {
+        res.result.data.forEach(item => {
           if (item.id === parseInt(id)) {
-            that.listDetail = item
+            if (item['content'] !== undefined) {
+              that.listDetail = item.content
+              that.show = true
+            } else {
+              wx.showToast({
+                title: '暂无忍者数据',
+                icon: 'none',
+                duration: 2000
+              })
+              that.show = false
+            }
           }
         })
-        // wx.setNavigationBarTitle({
-        //   title: that.listDetail.name
-        // })
-        // that.tableList.forEach(item => {
-        //   for (var key in that.listDetail) {
-        //     if (item.key === key) {
-        //       item.value = that.listDetail[key]
-        //     }
-        //   }
-        // })
+        if (that.show) {
+          that.listDetail.img = that.listDetail.img.replace(/www.hxy1995.xyz/, 'n8.hxy1995.xyz:8081')
+          wx.setNavigationBarTitle({
+            title: that.listDetail.zname
+          })
+          that.tableList.forEach(item => {
+            for (var key in that.listDetail) {
+              if (item.key === key) {
+                item.value = that.listDetail[key]
+              }
+            }
+          })
+        }
       },
       fail: function (err) {
         console.log('云函数获取数据失败', err)
